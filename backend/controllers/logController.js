@@ -54,6 +54,7 @@ export const getToday = async (req, res) => {
 
 export const getRange = async (req, res) => {
     try {
+        const { start, end } = req.query;
         const logs= await HabitLog.find({
             userId: req.user._id,
             completedDate: { $gte: start, $lte: end },
@@ -76,11 +77,11 @@ export const getHeatMap = async (req, res) => {
         for (const d of days) counts[d]=0;
         for (const l of logs) counts[l.completedDate]= (counts[l.completedDate] || 0) + 1;
         
-        const result = days.map(date => ({
+        const data = days.map(date => ({
             date,
             count: counts[date]
         }));
-        res.json(result);
+        res.json(data);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: err.message });
@@ -89,7 +90,7 @@ export const getHeatMap = async (req, res) => {
 
 export const getHabitStats = async (req, res) => {
     try {
-        const habit = await Hbit.findOne({ _id: req.params.id, userId: req.user._id });
+        const habit = await Habit.findOne({ _id: req.params.id, userId: req.user._id });
         if (!habit) {
             return res.status(404).json({ message: "Habit not found" });
         }
@@ -139,7 +140,7 @@ export const getAllStats = async (req, res) => {
             const keys= hLogs.map((l) => l.completedDate).sort().reverse();
             const {current, longest} = calcStreak(keys);
             return {
-                habit: h._id,
+                habitId: h._id,
                 name: h.name,
                 icon: h.icon,
                 color: h.color,
@@ -149,7 +150,7 @@ export const getAllStats = async (req, res) => {
                 longestStreak: longest,
             };
         });
-        res.json({ habits: perHabit, days });
+        res.json({ perHabit, days });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: err.message });

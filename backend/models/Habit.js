@@ -34,8 +34,8 @@ const habitSchema = new mongoose.Schema(
         default: "Other" },
     frequency: { 
         type: String, 
-        enum: ["Daily", "Weekly"], 
-        default: "Daily" },
+        enum: ["daily", "weekly"], 
+        default: "daily" },
     targetDays: { type: Number, default: 7, min: 1, max : 7 },
     color: { type: String, default: "#6366f1" },
     icon: { type: String, default: "🎯" },

@@ -165,8 +165,7 @@ export const chatAnalysis = async (req, res) => {
                 const dow = new Date(l.completedDate).getDay();
                 byDow[dow]++;
             }
-            return `- ${h.name} (${h.category}): ${hLogs.length}/30 in last 30 days, by weekday [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
-            byDow)}`;
+            return `- ${h.name} (${h.category}): ${hLogs.length}/30 in last 30 days, by weekday [Sun, Mon, Tue, Wed, Thu, Fri, Sat]: ${JSON.stringify(byDow)}`;
         }).join("\n");
         const userMsg = `User question: "${question}"\nUser data (last 30 days):\n${context}\n\nAnswer now.`;
         const { content } = await chatCompletion({
@@ -206,7 +205,7 @@ export const morningMotivation = async (req, res) => {
             .map((l) => l.completedDate)
             .sort().reverse();
             const { current } = calcStreak(hLogs);
-            return `${h.name} (current streak: ${current}`;
+            return `${h.name} (current streak: ${current})`;
         })
         .join(", ");
         const today = todayKey();

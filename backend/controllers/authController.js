@@ -47,8 +47,8 @@ export const login = async (req, res) => {
     }
     const token = signToken(user._id);
     res.json({ user, token });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -71,8 +71,8 @@ export const UpdateProfile = async (req, res) => {
         }
         await user.save();
         res.json({ user });
-    } catch (error) {
-        console.error(error);
+    } catch (err) {
+        console.error(err);
         res.status(500).json({ message: err.message });
      }
 };
