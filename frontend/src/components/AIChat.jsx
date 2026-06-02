@@ -55,7 +55,7 @@ export default function AIChat() {
     <>
       <button
         onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-20 md:bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-2xl shadow-brand-500/40 flex items-center justify-center hover:scale-105 active:scale-95 transition"
+        className="fixed bottom-20 md:bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-linear-to-br from-brand-500 to-brand-700 text-white shadow-2xl shadow-brand-500/40 flex items-center justify-center hover:scale-105 active:scale-95 transition"
         aria-label="AI Chat"
       >
         {open ? <X size={22} /> : <MessageCircle size={22} />}
@@ -64,7 +64,7 @@ export default function AIChat() {
       {open && (
         <div className="fixed bottom-36 md:bottom-24 right-6 z-40 w-[min(92vw,380px)] h-[min(70vh,520px)] glass-strong rounded-2xl flex flex-col animate-slide-up shadow-2xl overflow-hidden">
           <div className="px-4 py-3 border-b divider flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center shadow-md shadow-brand-500/30">
+            <div className="w-8 h-8 rounded-lg bg-linear-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center shadow-md shadow-brand-500/30">
               <Sparkles size={14} />
             </div>
             <div>
@@ -87,7 +87,7 @@ export default function AIChat() {
                 <div
                   className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
                     m.role === "user"
-                      ? "bg-gradient-to-br from-brand-500 to-brand-700 text-white rounded-br-md shadow-md shadow-brand-500/30"
+                      ? "bg-linear-to-br from-brand-500 to-brand-700 text-white rounded-br-md shadow-md shadow-brand-500/30"
                       : "glass rounded-bl-md"
                   }`}
                 >
@@ -109,7 +109,8 @@ export default function AIChat() {
                   <button
                     key={i}
                     onClick={() => send(s)}
-                    className="block w-full text-left text-xs rounded-lg glass hover:bg-[var(--surface-hover)] px-3 py-2 text-soft"
+                    className="block w-full text-left text-xs rounded-lg glass hover:
+                    bg-(--surface-hover) px-3 py-2 text-soft"
                   >
                     {s}
                   </button>
@@ -126,6 +127,8 @@ export default function AIChat() {
             className="p-3 border-t divider flex gap-2"
           >
             <input
+              id="chat-input"
+              name="chat-input"
               className="input"
               placeholder="Ask about your habits..."
               value={input}
