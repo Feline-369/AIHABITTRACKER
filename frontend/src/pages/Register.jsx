@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Sparkles, Sun, Moon } from "lucide-react";
+import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useTheme } from "../context/ThemeContext.jsx";
 
 export default function Register() {
-  const { user, register } = useAuth();
+  const { user, register, googleLogin } = useAuth();
   const { theme, toggle } = useTheme();
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -15,6 +16,19 @@ export default function Register() {
   if (user) return <Navigate to="/dashboard" replace />;
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setErr("");
+    setLoading(true);
+    try {
+      await googleLogin(credentialResponse.credential);
+      navigate("/dashboard", { replace: true });
+    } catch (e) {
+      setErr(e.response?.data?.message || "Google sign-up failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const submit = async (e) => {
     e.preventDefault();
@@ -49,7 +63,7 @@ export default function Register() {
           to="/"
           className="flex items-center justify-center gap-2 mb-6"
         >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center shadow-lg shadow-brand-500/30">
+          <div className="w-9 h-9 rounded-xl bg-linear-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center shadow-lg shadow-brand-500/30">
             <Sparkles size={18} />
           </div>
           <span className="font-semibold text-lg">AI Habit Tracker</span>
@@ -108,6 +122,23 @@ export default function Register() {
               {loading ? "Creating account..." : "Create account"}
             </button>
           </form>
+
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-xs text-soft">or</span>
+            <div className="flex-1 h-px bg-border" />
+          </div>
+
+          <div className="flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setErr("Google sign-up failed")}
+              theme={theme === "dark" ? "filled_black" : "outline"}
+              shape="rectangular"
+              width="368"
+              text="signup_with"
+            />
+          </div>
 
           <div className="text-center mt-5 text-sm text-soft">
             Already have an account?{" "}

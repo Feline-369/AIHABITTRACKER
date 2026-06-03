@@ -94,8 +94,12 @@ export default function Sidebar() {
         </button>
 
         <div className="px-2 py-2 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-white font-semibold flex items-center justify-center shadow-md shadow-brand-500/30">
-            {user?.avatar || user?.name?.charAt(0).toUpperCase() || "U"}
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-white font-semibold flex items-center justify-center shadow-md shadow-brand-500/30 overflow-hidden">
+            {user?.avatar?.startsWith("http") ? (
+              <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+            ) : (
+              user?.avatar || user?.name?.charAt(0).toUpperCase() || "U"
+            )}
           </div>
           <div className="flex-1 min-w-0">
             <div className="text-sm font-medium truncate">{user?.name}</div>

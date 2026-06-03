@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Sparkles, Sun, Moon } from "lucide-react";
+import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useTheme } from "../context/ThemeContext.jsx";
 
 export default function Login() {
-  const { user, login } = useAuth();
+  const { user, login, googleLogin } = useAuth();
   const { theme, toggle } = useTheme();
   const loc = useLocation();
   const navigate = useNavigate();
@@ -15,6 +16,19 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   if (user) return <Navigate to="/dashboard" replace />;
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setErr("");
+    setLoading(true);
+    try {
+      await googleLogin(credentialResponse.credential);
+      navigate(loc.state?.from || "/dashboard", { replace: true });
+    } catch (e) {
+      setErr(e.response?.data?.message || "Google sign-in failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const submit = async (e) => {
     e.preventDefault();
@@ -45,7 +59,7 @@ export default function Login() {
           to="/"
           className="flex items-center justify-center gap-2 mb-6"
         >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center shadow-lg shadow-brand-500/30">
+          <div className="w-9 h-9 rounded-xl bg-linear-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center shadow-lg shadow-brand-500/30">
             <Sparkles size={18} />
           </div>
           <span className="font-semibold text-lg">AI Habit Tracker</span>
@@ -94,6 +108,23 @@ export default function Login() {
               {loading ? "Signing in..." : "Sign in"}
             </button>
           </form>
+
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-xs text-soft">or</span>
+            <div className="flex-1 h-px bg-border" />
+          </div>
+
+          <div className="flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setErr("Google sign-in failed")}
+              theme={theme === "dark" ? "filled_black" : "outline"}
+              shape="rectangular"
+              width="368"
+              text="signin_with"
+            />
+          </div>
 
           <div className="text-center mt-5 text-sm text-soft">
             Don't have an account?{" "}
